@@ -25,7 +25,7 @@ type (
 var DBClient *sql.DB
 
 func InitConnection() {
-	db, err := sql.Open("mysql", "")
+	db, err := sql.Open("mysql", "DenysShpak:den132435123shpkQWE@/media_db")
 	if err != nil {
 		panic(err.Error())
 	}

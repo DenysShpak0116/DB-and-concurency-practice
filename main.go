@@ -3,9 +3,10 @@ package main
 import (
 	"db_working/client"
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"strconv"
+	"sync"
 )
 
 func main() {
@@ -13,8 +14,13 @@ func main() {
 
 	posts := GetAllUsersPosts(7)
 
+	var wg sync.WaitGroup
+
 	for _, post := range posts {
+
+		wg.Add(1)
 		go func(post client.Post) {
+			defer wg.Done()
 			WritePostToDB(post)
 
 			comments := GetAllPostsComments(post.Id)
@@ -25,8 +31,8 @@ func main() {
 		}(post)
 	}
 
-	var input string
-	fmt.Scanln(&input)
+	wg.Wait()
+	log.Println("Done.")
 }
 
 func GetAllUsersPosts(userId int) []client.Post {
